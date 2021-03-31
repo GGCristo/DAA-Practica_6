@@ -5,9 +5,9 @@
 
 LCS::LCS() {
   std::cout << "Introduzca un string\n";
-  // std::cin >> string1_;
+  std::cin >> string1_;
   std::cout << "Introduzca otro string\n";
-  // std::cin >> string2_;
+  std::cin >> string2_;
   tabla_.resize(string1_.size() + 1);
   for (size_t i = 0; i < tabla_.size(); ++i) {
     tabla_[i].resize(string2_.size() + 1);
@@ -59,12 +59,16 @@ std::vector<std::string> LCS::getSecuence(int i, int j) {
       }
     }
     queue.pop();
-    secuences.push_back(result);
+    if (find(secuences.begin(), secuences.end(), result) == secuences.end()) {
+      secuences.push_back(result);
+    }
   }
   return secuences;
 }
 
 std::ostream& LCS::showTable(std::ostream& os) {
+  std::cout << "String filas: " << string1_ << '\n';
+  std::cout << "String columnas: " << string2_ << '\n';
   for (size_t i = 1; i < tabla_.size(); ++i) {
     for (size_t j = 1; j < tabla_[0].size(); ++j) {
       os << tabla_[i][j] << ' ';

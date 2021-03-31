@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <string_view>
+#include <algorithm>
 #include <queue>
 
 class LCS {
