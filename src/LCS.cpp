@@ -15,7 +15,7 @@ LCS::LCS() {
   construirTabla();
 }
 
-LCS::LCS(std::string_view string1, std::string_view string2) :
+LCS::LCS(const std::string& string1, const std::string& string2) :
   string1_(string1), string2_(string2), tabla_(string1.size() + 1,
   std::vector<int>(string2.size() + 1)) {
   construirTabla();
@@ -30,28 +30,38 @@ void LCS::construirTabla() {
   }
 }
 
-std::string LCS::getSecuence(int i, int j) {
-  if (i == -1) i = tabla_.size() - 1;
-  if (j == -1) j = tabla_[0].size() - 1;
-  std::string result;
-  result.reserve(tabla_[i][j]);
-  while(i > 0 && j > 0) {
-    if (tabla_[i - 1][j] == tabla_[i][j]) {
-      // std::cout << "Arriba\n";
-      --i;
-    } else if (tabla_[i][j - 1] == tabla_[i][j]) {
-      // std::cout << "Izquierda\n";
-      --j;
-    } else {
-      // std::cout << "Diagonal\n";
-      result.insert(0, 1, string2_[j - 1]);
-      --i; --j;
+
+std::vector<std::string> LCS::getSecuence() {
+  return getSecuence(tabla_.size() - 1 , tabla_[0].size() - 1);
+}
+
+std::vector<std::string> LCS::getSecuence(int i, int j) {
+  std::vector<std::string> secuences;
+  puntoPendiente::stringSize_ = tabla_[i][j];
+  puntoPendiente inicial (i, j);
+  std::queue<puntoPendiente> queue;
+  queue.push(inicial);
+  while(!queue.empty()) {
+    i = queue.front().i_;
+    j = queue.front().j_;
+    std::string result = queue.front().soFar_;
+    while(i > 0 && j > 0) {
+      if (tabla_[i - 1][j] == tabla_[i][j]) {
+        if (tabla_[i][j - 1] == tabla_[i][j]) {
+          queue.push(puntoPendiente(i, j - 1, result));
+        }
+        --i;
+      } else if (tabla_[i][j - 1] == tabla_[i][j]) {
+        --j;
+      } else {
+        result.insert(0, 1, string2_[j - 1]);
+        --i; --j;
+      }
     }
+    queue.pop();
+    secuences.push_back(result);
   }
-  if (tabla_[i][j] > 0) {
-    result.insert(0, 1, string2_[j - 1]);
-  }
-  return result;
+  return secuences;
 }
 
 std::ostream& LCS::showTable(std::ostream& os) {

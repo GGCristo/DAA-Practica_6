@@ -8,16 +8,19 @@
 
 int main() {
   auto t1 = std::chrono::high_resolution_clock::now();
-  LCS lcs("AAACCGTGAGTTATTCGTTCTAGAA", "CACCCCTAAGGTACCTTTGGTTC");
-  // LCS lcs("abdace", "babce");
-  // LCS lcs;
+  // LCS lcs("AAACCGTGAGTTATTCGTTCTAGAA", "CACCCCTAAGGTACCTTTGGTTC");
+  LCS lcs("babce", "abdace");
+  lcs.showTable();
+  std::vector<std::string> resultado = lcs.getSecuence();
   auto t2 = std::chrono::high_resolution_clock::now();
   // LCS lcs;
   std::cout << "TEST1 time: "
     << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << " microsegundos | "
     << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1000.0 << " milisegundos | "
     << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1000000.0 << " segundos\n";
-  lcs.showTable();
-  std::cout << lcs.getSecuence();
+  std::cout << "Longitud: " << puntoPendiente::stringSize_ << '\n';
+  for (size_t i = 0; i < resultado.size(); ++i) {
+    std::cout << i + 1 << ": " << resultado[i] << '\n';
+  }
   return 0;
 }
