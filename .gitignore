@@ -1,0 +1,9 @@
+/.ccls-cache/
+/.tasks
+/.vimspector.json
+/Debug/
+/bin/
+/compile_commands.json
+/project.log
+/report.tasks
+/build/
