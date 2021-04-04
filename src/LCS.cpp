@@ -24,12 +24,12 @@ LCS::LCS(const std::string& string1, const std::string& string2) :
 void LCS::construirTabla() {
   for (size_t i = 1; i < tabla_.size(); ++i) {
     for (size_t j = 1; j < tabla_[i].size(); ++j) {
-      tabla_[i][j] = string1_[i - 1] != string2_[j - 1] ? std::max(tabla_[i - 1][j],
-          tabla_[i][j - 1]) : 1 + tabla_[i - 1][j - 1];
+      tabla_[i][j] = string1_[i - 1] != string2_[j - 1] ?
+        std::max(tabla_[i - 1][j], tabla_[i][j - 1]) :
+        1 + tabla_[i - 1][j - 1];
     }
   }
 }
-
 
 std::vector<std::string> LCS::getSecuence() {
   return getSecuence(tabla_.size() - 1 , tabla_[0].size() - 1);
@@ -38,29 +38,30 @@ std::vector<std::string> LCS::getSecuence() {
 std::vector<std::string> LCS::getSecuence(int i, int j) {
   std::vector<std::string> secuences;
   puntoPendiente::stringSize_ = tabla_[i][j];
-  puntoPendiente inicial (i, j);
-  std::queue<puntoPendiente> queue;
-  queue.push(inicial);
+  std::deque<puntoPendiente> queue ({puntoPendiente(i, j)});
   while(!queue.empty()) {
     i = queue.front().i_;
     j = queue.front().j_;
     std::string result = queue.front().soFar_;
     while(i > 0 && j > 0) {
-      if (tabla_[i - 1][j] == tabla_[i][j]) {
-        if (tabla_[i][j - 1] == tabla_[i][j]) {
-          queue.push(puntoPendiente(i, j - 1, result));
+      const int IZQUIERDA = tabla_[i][j - 1];
+      // const int ARRIBA = tabla_[i - 1][j];
+      const int PUNTO = tabla_[i][j];
+      if (tabla_[i - 1][j] == PUNTO) {
+        if (IZQUIERDA == PUNTO) {
+          queue.emplace_back(puntoPendiente(i, j - 1, result));
         }
         --i;
-      } else if (tabla_[i][j - 1] == tabla_[i][j]) {
+      } else if (IZQUIERDA == PUNTO) {
         --j;
       } else {
         result.insert(0, 1, string2_[j - 1]);
         --i; --j;
       }
     }
-    queue.pop();
+    queue.pop_front();
     if (find(secuences.begin(), secuences.end(), result) == secuences.end()) {
-      secuences.push_back(result);
+      secuences.emplace_back(result);
     }
   }
   return secuences;
